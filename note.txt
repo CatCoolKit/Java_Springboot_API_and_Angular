@@ -1,0 +1,13 @@
+npm install -g @angular/cli
+ng new [PROJECT NAME]
+Run: cd [PROJECT NAME]
+     ng serve
+ng generate component home
+
+npm install @fortawesome/fontawesome-free
+--no-standalone
+
+Trong xampp
+mysql -u root -p
+npm install class-validator class-transformer
+npm install @ngrx/store

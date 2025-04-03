@@ -1,0 +1,5 @@
+jwt:
+  secretKey: "fNHtXgduwiz/6YUz/7MixybNHI2HZp9VrGHeHVA7ZUJGJ6WSWqLeDFgmf3raRO8B"
+  valid-duration: 40 # in second
+  refreshable-duration: 200 # in second
+

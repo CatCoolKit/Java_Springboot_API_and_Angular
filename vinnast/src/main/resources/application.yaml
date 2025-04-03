@@ -1,0 +1,25 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /identity
+spring:
+  application:
+    name : vinnast
+  datasource:
+    url: jdbc:mysql://localhost:3306/facebook?useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+jwt:
+  secretKey: "QPUdyYXtMSGKA/nvcRewvGGIXv+fptrFK/bJ74yaKnllxTV95foLUAuvxoX16B2C"
+  valid-duration: 20 # in second
+  refreshable-duration: 120 # in second
+

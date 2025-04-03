@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document Manager</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/webjars/bootstrap/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid text-center">
+      <div>
+        <h1>Document Manager</h1>
+      </div>
+
+      <div class="text-success">
+        <h3>[[${message}]]</h3>
+      </div>
+
+      <div class="text-danger">
+        <h3>[[${error}]]</h3>
+      </div>
+
+      <div class="row border rounded m-3 p-3">
+        <th:block th:each="doc : ${listDocs}">
+          <div class="col">
+            <div>
+              <img th:src="@{/images/download.png}" width="50px" />
+            </div>
+            <div>
+              <a th:href="@{'/download?id=' + ${doc.id}}">[[${doc.name}]]</a>
+            </div>
+            <div>
+              ([[${#numbers.formatInteger(doc.size, 4, 'COMMA')}]] bytes)
+            </div>
+          </div>
+        </th:block>
+      </div>
+
+      <form
+        th:action="@{/upload}"
+        method="post"
+        enctype="multipart/form-data"
+        style="max-width: 600px; margin: 0 auto"
+      >
+        <div class="border rounded m-3">
+          <h2>Upload Your Files:</h2>
+          <p>
+            <input type="file" id="fileUpload" name="document" required />
+          </p>
+          <p>
+            <input type="submit" value="Upload" class="btn btn-primary" />
+          </p>
+        </div>
+      </form>
+      <form
+        th:action="@{/brands/save}"
+        th:object="${brand}"
+        method="post"
+        enctype="multipart/form-data"
+        style="max-width: 600px; margin: 0 auto"
+      >
+        <div class="border rounded m-3">
+          <h2>Upload Your Images:</h2>
+          <p>
+            <label>Brand Name: </label>
+            <input type="text" id="fileName" name="fileName" required/>
+          </p>
+          <p>
+            <label>Brand Logo: </label>
+            <input
+              type="file"
+              id="fileImage"
+              name="fileImage"
+              required
+              accept="image/png, image/jpeg"
+            />
+          </p>
+          <p>
+            <img
+              id="thumbnail"
+              alt="Logo Preview"
+              style="max-width: 400px; margin: 0 auto"
+              src="https://via.placeholder.com/400x200"
+            />
+          </p>
+          <p>
+            <input type="submit" value="Upload" class="btn btn-primary" />
+          </p>
+        </div>
+      </form>
+
+      <form
+              th:action="@{/brands/save/multiple}"
+              th:object="${brand}"
+              method="post"
+              enctype="multipart/form-data"
+              style="max-width: 600px; margin: 0 auto"
+      >
+      <div>
+        <h2>Upload Your Multi Images:</h2>
+        <div class="row">
+          <div class="col border m-3">
+            <p>
+              <img id="thumbnail0" alt="Logo Preview" style="max-width: 400px; margin: 0 auto" src="https://via.placeholder.com/100x100"/>
+            </p>
+            <p>
+              <label>Main Image: </label>
+            </p>
+            <p>
+              <input type="file" id="mainImage" name="mainImage" required accept="image/png, image/jpeg"/>
+            </p>
+          </div>
+          <div class="col border m-3">
+            <p>
+              <img id="thumbnail1" alt="Logo Preview" style="max-width: 400px; margin: 0 auto" src="https://via.placeholder.com/100x100"/>
+            </p>
+            <p>
+              <label>Main Image #1: </label>
+            </p>
+            <p>
+              <input type="file" id="mainImage1" name="mainImage" required accept="image/png, image/jpeg"/>
+            </p>
+          </div>
+          <div class="col border m-3">
+            <p>
+              <img id="thumbnail2" alt="Logo Preview" style="max-width: 400px; margin: 0 auto" src="https://via.placeholder.com/100x100"/>
+            </p>
+            <p>
+              <label>Main Image #2: </label>
+            </p>
+            <p>
+              <input type="file" id="mainImage2" name="mainImage" required accept="image/png, image/jpeg"/>
+            </p>
+          </div>
+
+        </div>
+
+        <div>
+          <p class="text-center">
+            <input type="submit" value="Save" class="btn btn-primary m-3"/>
+            <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel"/>
+          </p>
+        </div>
+      </div>
+      </form>
+    </div>
+
+    <table>
+      <tbody>
+      <tr th:each="product : ${listBrands}">
+        <td th:text="${product.id}">Product ID</td>
+        <td>
+          <img th:src="@{'/brand-logos/' + ${product.id} + '/' + ${product.extraImage1}}" alt="Extra Image 1">
+        </td>
+        <td>
+          <img th:src="@{'/brand-logos/' + ${product.id} + '/' + ${product.extraImage2}}" alt="Extra Image 2">
+        </td>
+        <td>
+          <img th:src="@{'/brand-logos/' + ${product.id} + '/' + ${product.extraImage3}}" alt="Extra Image 3">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        maxFileSize = 10 * 1024 * 1024;
+        $("#fileUpload").change(function () {
+          fileSize = this.files[0].size;
+
+          if (fileSize > maxFileSize) {
+            this.setCustomValidity("You can upload only files under 10MB");
+            this.reportValidity();
+          } else {
+            this.setCustomValidity("");
+          }
+        });
+
+        $("#fileImage").change(function () {
+          showImageThumbnail(this);
+        });
+
+        $("input[name='mainImage']").each(function(index) {
+          $(this).change(function () {
+            showExtraImageThumbnail(this, index);
+          });
+        });
+      });
+      function showImageThumbnail(fileInput) {
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          $("#thumbnail").attr("src", e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function showExtraImageThumbnail(fileInput, index) {
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#thumbnail' + index).attr("src", e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    </script>
+  </body>
+</html>

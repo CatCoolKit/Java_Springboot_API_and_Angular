@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel File</title>
+</head>
+<body>
+<h2>Upload Excel File</h2>
+<form method="POST" action="/upload-excel" enctype="multipart/form-data">
+    <input type="file" name="excelFile" accept=".xls,.xlsx" />
+    <button type="submit">Upload Excel</button>
+</form>
+<h2>Upload Word File</h2>
+<form method="POST" action="/upload-word" enctype="multipart/form-data">
+    <input type="file" name="wordFile" accept=".docx" />
+    <button type="submit">Upload Word</button>
+</form>
+</body>
+</html>
